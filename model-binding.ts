@@ -21,11 +21,11 @@ const RegisterBind: MethodDecorator = (
 
   const binds = Reflect.getMetadata(MetadataKeys.METHOD, target, methodKey);
 
-  desc.value = function (...args: any[]) {
+  desc.value = async function (...args: any[]) {
     for (let bind of binds) {
       const { paramIndex, model } = bind;
       const resolver = Reflect.getMetadata(MetadataKeys.METHOD, model);
-      args[paramIndex] = resolver(args[paramIndex]);
+      args[paramIndex] = await resolver(args[paramIndex]);
     }
 
     return originalMethod.apply(this, args);
@@ -56,7 +56,7 @@ const Resolver = (model: Function): MethodDecorator => (
 
 class StickService {
   @Resolver(StickModel)
-  rotate(id: number) {
+  async rotate(id: number) {
     console.log("Resolving Stick");
     return new StickModel(id);
   }
@@ -64,7 +64,7 @@ class StickService {
 
 class BarService {
   @Resolver(BarModel)
-  dive(id: number) {
+  async dive(id: number) {
     console.log("Resolving Bar");
     return new StickModel(id);
   }
@@ -74,11 +74,19 @@ class Controller {
   constructor() {}
 
   @RegisterBind
-  get(@Bind(StickModel) stick: StickModel, @Bind(BarModel) bar: BarModel) {
+  async get(
+    @Bind(StickModel) stick: StickModel,
+    @Bind(BarModel) bar: BarModel
+  ) {
     console.log(stick);
     console.log(bar);
     return stick;
   }
 }
 
-new Controller().get(21 as any, 23 as any);
+const main = () => {
+  const controller = new Controller();
+  controller.get(21 as any, 23 as any).then(() => {});
+};
+
+main();
