@@ -5,49 +5,6 @@ enum MetadataKeys {
   BIND = "BIND",
 }
 
-const planeClassD: ClassDecorator = (constructor: Function) => {
-  // console.log("Class:", constructor);
-};
-
-const planePropertyD: PropertyDecorator = (
-  target: any,
-  key: string | symbol
-): void => {
-  // console.log("Property: ", "Key: ", key);
-};
-
-const planeMethodD: MethodDecorator = (
-  target: any,
-  key: string | symbol,
-  desc: PropertyDescriptor
-): void => {
-  // console.log("Method: ", "Key: ", key);
-};
-
-const planeParamD: ParameterDecorator = (
-  target: any,
-  key: string | symbol,
-  index: number
-): void => {
-  // console.log("Parameter:", target, key, index);
-};
-
-@planeClassD
-class Plane {
-  @planePropertyD
-  color: string = "red";
-
-  @planePropertyD
-  stick: StickService;
-
-  constructor(@planeParamD private size: number) {
-    this.stick = new StickService();
-  }
-
-  @planeMethodD
-  pilot(@planeParamD speed: string, generateWake: boolean): void {}
-}
-
 class StickModel {
   constructor(public id: number) {}
 }
